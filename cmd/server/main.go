@@ -100,7 +100,7 @@ func receiveRedisMessages() {
 		log.Fatal(err)
 	}
 
-	psc := redis.PubSubConn{c}
+	psc := redis.PubSubConn{Conn: c}
 	if err := psc.PSubscribe("*"); err != nil {
 		log.Fatal(err)
 	}
@@ -134,7 +134,7 @@ func subscribe(channel string) chan []byte {
 
 func unsubscribe(channel string, sub chan []byte) {
 	subscriptionsMutex.Lock()
-	newSubs := []chan []byte{}
+	var newSubs []chan []byte
 	subs := subscriptions[channel]
 	for _, s := range subs {
 		if s != sub {
